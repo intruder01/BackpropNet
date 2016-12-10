@@ -232,7 +232,7 @@ namespace BackpropNet
 			return currCase;
 		}
 
-		public double Train_org(Network net, Form1 form, TextBox txtBox, Boolean bDispUpdate)
+		public double Train(Network net, Form1 form, TextBox txtBox, Boolean bDispUpdate)
 		{
 			numEpochsRan = 0;
 			rmsError = 0.9999;
@@ -281,85 +281,6 @@ namespace BackpropNet
 					rmsError += Math.Pow(Data.Cases[i].totalError, 2);
 				}
 
-				rmsError = Math.Sqrt(rmsError) / Data.Cases.Count;
-
-				//update 1st 10 rows each time
-				if (bDispUpdate && numEpochsRan <= 11)
-					txtBox.AppendText(String.Format("{0} {1:F8}\n", numEpochsRan, rmsError));
-
-				Application.DoEvents();
-			}
-			while (numEpochsRan < tgtEpochs && rmsError > tgtRmsError && !form.bStopRequest);
-
-			if (bDispUpdate)
-				txtBox.AppendText(String.Format(">{0} {1:F8}\n", numEpochsRan, rmsError));
-
-			return rmsError;
-		}
-
-		public double Train(Network net, Form1 form, TextBox txtBox, Boolean bDispUpdate)
-		{
-			numEpochsRan = 0;
-			rmsError = 0.9999;
-
-			do
-			{
-				numEpochsRan++;
-				for (int i = 0; (i < Data.Cases.Count) && !form.bStopRequest; i++)  //very important, do NOT train for only one example
-				{
-					currCase = i;
-					//1) forward propagation (calculates output)
-
-					net.layers[0].assignInputs(Data.Cases[currCase].trainInputs);
-					for (int l = 0; l < net.layers.Count; l++)
-					{
-						net.layers[l].calcOutputs();
-					}
-
-					//save output data in trainer
-					Data.Cases[currCase].saveNodeOutputs(net.layers[net.layers.Count - 1].outputs);
-
-					//2) back propagation (adjusts weights)
-
-					//OUTPUT LAYER
-					//adjusts the weights of the output layer, based on it's error
-					//trainErrors[i] = layers[layers.Count - 1].calcErrors(trainData.getCase(i).Outputs);
-					////////////Data.Cases[currCase].totalError = net.layers[net.layers.Count - 1].calcErrors(Data.Cases[currCase].trainOutputs);
-					//net.layers[net.layers.Count - 1].adjustWeights();
-
-
-					//save error data in trainer
-					Data.Cases[currCase].saveNodeErrors(net.layers[net.layers.Count - 1].errors);
-					Data.Cases[currCase].calcRmsError();
-
-					//HIDDEN LAYERS
-					//adjusts the hidden layer's weights, based on their errors
-					////////////for (int l = net.layers.Count - 2; l >= 0; l--)
-					for (int l = net.layers.Count - 1; l >= 0; l--)
-					{
-						/////////////////////
-						if(l == net.layers.Count - 1)
-						{
-							Data.Cases[currCase].totalError = net.layers[net.layers.Count - 1].calcErrors(Data.Cases[currCase].trainOutputs);
-						}
-						/////////////////net.layers[l].calcErrors(net.layers[l + 1]);
-						net.layers[l].calcErrors(net.layers[l]);
-						net.layers[l].adjustWeights();
-					}
-
-					lastCase = currCase;
-
-					Application.DoEvents();
-					if (form.bStopRequest) break;
-				}
-
-				//network error
-				rmsError = 0.0;
-				for (int i = 0; i < Data.Cases.Count; i++)
-				{
-					//trainRMSError += Math.Pow(trainData.Cases[i].actRmsError, 2);
-					rmsError += Math.Pow(Data.Cases[i].totalError, 2);
-				}
 				rmsError = Math.Sqrt(rmsError) / Data.Cases.Count;
 
 				//update 1st 10 rows each time
