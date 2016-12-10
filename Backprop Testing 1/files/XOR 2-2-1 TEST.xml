@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Network xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Idx>0</Idx>
+  <cfg>
+    <schema>
+      <int>2</int>
+      <int>2</int>
+      <int>1</int>
+    </schema>
+    <learnRate>0.8</learnRate>
+    <rmsErrorTarget>0.001</rmsErrorTarget>
+    <maxEpochs>5000</maxEpochs>
+    <weightDivider>10</weightDivider>
+  </cfg>
+  <layers>
+    <Layer>
+      <actFunc xsi:type="actLogistic" />
+      <Idx>0</Idx>
+      <neurons>
+        <Neuron>
+          <Idx>0</Idx>
+          <biasWeight>0.043359375000000006</biasWeight>
+        </Neuron>
+        <Neuron>
+          <Idx>1</Idx>
+          <biasWeight>-0.087109375</biasWeight>
+        </Neuron>
+      </neurons>
+      <weights>
+        <ArrayOfDouble>
+          <double>0.047435897435897448</double>
+          <double>-0.045306122448979594</double>
+        </ArrayOfDouble>
+        <ArrayOfDouble>
+          <double>-0.095299145299145308</double>
+          <double>0.0910204081632653</double>
+        </ArrayOfDouble>
+      </weights>
+    </Layer>
+    <Layer>
+      <actFunc xsi:type="actLogistic" />
+      <Idx>1</Idx>
+      <neurons>
+        <Neuron>
+          <Idx>0</Idx>
+          <biasWeight>0.09140625</biasWeight>
+        </Neuron>
+      </neurons>
+      <weights>
+        <ArrayOfDouble>
+          <double>0.1</double>
+          <double>-0.095510204081632646</double>
+        </ArrayOfDouble>
+      </weights>
+    </Layer>
+  </layers>
+</Network>

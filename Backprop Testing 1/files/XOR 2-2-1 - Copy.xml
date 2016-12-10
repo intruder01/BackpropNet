@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NetworkConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <schema>
+    <int>2</int>
+    <int>2</int>
+    <int>1</int>
+  </schema>
+  <learnRate>0.8</learnRate>
+  <rmsErrorTarget>0.001</rmsErrorTarget>
+  <maxEpochs>6000</maxEpochs>
+  <weightDivider>10</weightDivider>
+</NetworkConfig>
