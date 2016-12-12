@@ -308,8 +308,8 @@ namespace BackpropNet
 				for (int i = 0; (i < Data.Cases.Count) && !form.bStopRequest; i++)  //very important, do NOT train for only one example
 				{
 					currCase = i;
+					
 					//1) forward propagation (calculates output)
-
 					net.layers[0].assignInputs(Data.Cases[currCase].trainInputs);
 					for (int l = 0; l < net.layers.Count; l++)
 					{
@@ -321,31 +321,41 @@ namespace BackpropNet
 
 					//2) back propagation (adjusts weights)
 
-					//OUTPUT LAYER
-					//adjusts the weights of the output layer, based on it's error
-					//trainErrors[i] = layers[layers.Count - 1].calcErrors(trainData.getCase(i).Outputs);
-					////////////Data.Cases[currCase].totalError = net.layers[net.layers.Count - 1].calcErrors(Data.Cases[currCase].trainOutputs);
-					//net.layers[net.layers.Count - 1].adjustWeights();
+					////////////OUTPUT LAYER
+					////////////adjusts the weights of the output layer, based on it's error
+					//////////Data.Cases[currCase].totalError = net.layers[net.layers.Count - 1].calcErrors(Data.Cases[currCase].trainOutputs);
+					//////////net.layers[net.layers.Count - 1].adjustWeights();
 
+					////////////save error data in trainer
+					//////////Data.Cases[currCase].saveNodeErrors(net.layers[net.layers.Count - 1].errors);
+					//////////Data.Cases[currCase].calcRmsError();
 
-					//save error data in trainer
-					Data.Cases[currCase].saveNodeErrors(net.layers[net.layers.Count - 1].errors);
-					Data.Cases[currCase].calcRmsError();
 
 					//HIDDEN LAYERS
 					//adjusts the hidden layer's weights, based on their errors
 					////////////for (int l = net.layers.Count - 2; l >= 0; l--)
 					for (int l = net.layers.Count - 1; l >= 0; l--)
 					{
-						/////////////////////
-						if(l == net.layers.Count - 1)
+						if (l == net.layers.Count - 1)
 						{
 							Data.Cases[currCase].totalError = net.layers[net.layers.Count - 1].calcErrors(Data.Cases[currCase].trainOutputs);
+							net.layers[l].adjustWeights();
+
+							//save error data in trainer
+							Data.Cases[currCase].saveNodeErrors(net.layers[net.layers.Count - 1].errors);
+							Data.Cases[currCase].calcRmsError();
 						}
-						/////////////////net.layers[l].calcErrors(net.layers[l + 1]);
-						net.layers[l].calcErrors(net.layers[l]);
-						net.layers[l].adjustWeights();
+						else
+						{
+							net.layers[l].calcErrors(net.layers[l + 1]);
+							net.layers[l].adjustWeights();
+						}
 					}
+
+					//for (int l = net.layers.Count - 1; l >= 0; l--)
+					//{
+					//	net.layers[l].adjustWeights();
+					//}
 
 					lastCase = currCase;
 

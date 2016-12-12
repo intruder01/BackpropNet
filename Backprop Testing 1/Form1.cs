@@ -235,7 +235,7 @@ namespace BackpropNet
 		{
 			int numPasses = 0;
 			int numGood = 0;
-			int aveEpochs = 0;
+			int aveNumEpochs = 0;
 
 			btnStop.Focus();
 			btnStop.Refresh();
@@ -255,7 +255,7 @@ namespace BackpropNet
 			{
 				numPasses = 0;
 				numGood = 0;
-				aveEpochs = 0;
+				aveNumEpochs = 0;
 
 				//transfer parameter to network
 				//net.cfg.learnRate = par;
@@ -277,7 +277,7 @@ namespace BackpropNet
 					if (trainCtrl.Train(net, this, txtBox1, bDispUpdate) < trainCtrl.tgtRmsError)
 						numGood++;
 					
-					aveEpochs += trainCtrl.numEpochsRan;
+					aveNumEpochs += trainCtrl.numEpochsRan;
 
 					if (bStopRequest)
 						break;
@@ -286,17 +286,17 @@ namespace BackpropNet
 				}
 
 				double percGood = (double)numGood / (double)numPasses * 100.0;
-				aveEpochs /= numPasses;
+				aveNumEpochs /= numPasses;
 
 				chartTrain.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
 				chartTrain.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
-				if (aveEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
-					chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = aveEpochs;
+				if (aveNumEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
+					chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = aveNumEpochs;
 				chartTrain.ChartAreas["ChartArea1"].AxisY2.Minimum = 0;
 				chartTrain.ChartAreas["ChartArea1"].AxisY2.Maximum = 100;
 
 				chartTrain.Series["PercGood"].Points.AddXY(par, percGood);
-				chartTrain.Series["AveNumEpochs"].Points.AddXY(par, aveEpochs);
+				chartTrain.Series["AveNumEpochs"].Points.AddXY(par, aveNumEpochs);
 				//txtBox1.AppendText(String.Format("Param: {0:F2}  Passes: {1}  Good: {2}  %: {3:F2}  AveEpochs {4}\n", param, numPasses, numGood, percGood, aveEpochs));
 
 				if (bStopRequest)

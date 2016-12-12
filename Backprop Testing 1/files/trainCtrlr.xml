@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TrainingController xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <tgtEpochs>5000</tgtEpochs>
+  <tgtEpochs>10000</tgtEpochs>
   <tgtRmsError>0.001</tgtRmsError>
-  <trainPasses>1</trainPasses>
+  <trainPasses>10</trainPasses>
   <trainParamFrom>0.1</trainParamFrom>
-  <trainParamTo>0.1</trainParamTo>
+  <trainParamTo>10</trainParamTo>
   <trainParamStep>0.1</trainParamStep>
   <trainEpochs>1</trainEpochs>
 </TrainingController>

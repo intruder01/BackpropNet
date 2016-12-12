@@ -17,7 +17,7 @@ namespace BackpropNet
 		public int Idx { get; set; } //this nrn number in layer
 		public double biasWeight { get; set; }
 
-		//fields re-created durign construction
+		//fields re-created during construction
 		[XmlIgnore]
 		public Layer layer;         //parent layer
 		[XmlIgnore]
