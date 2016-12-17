@@ -25,7 +25,9 @@ namespace BackpropNet
 		public List<double> errors { get; set; }  //neuron errors [n]
 		[XmlIgnore]
 		public Network net { get; set; } //owner network
-		
+
+
+		#region Constructors
 		public Layer()
 		{
 			neurons = new List<Neuron>();
@@ -46,7 +48,11 @@ namespace BackpropNet
 			createOutputs(Schema[Idx + 1]);
 			actFunc = new actLogistic();	//default activation
 		}
-		
+
+#endregion
+
+
+		#region Creation
 		private void createNeurons(int numNeurons)
 		{
 			//neurons = new List<Neuron>();
@@ -93,60 +99,68 @@ namespace BackpropNet
 			}
 		}
 
-		public void randomizeWeights(Random r)
+		public void RandomizeWeights(Random r)
 		{
 			for (int n = 0; n < neurons.Count; n++) //for each neuron
 			{
-				neurons[n].randomizeWeights(r);
+				neurons[n].RandomizeWeights(r);
 			}
 		}
 
-		public void calcOutputs()
+		#endregion
+
+
+		#region Training
+
+		public void CalcOutputs()
 		{
 			for (int n = 0; n < neurons.Count; n++) //for each neuron
 			{
-				neurons[n].calcOutput();
+				neurons[n].CalcOutput();
 			}
 		}
 
 		//ouput layer error = f'(output) * (target - output)
-		public double calcErrors(List<double> target)
+		public double CalcErrors(List<double> target)
 		{
 			double sumError = 0.0;
 			for (int n = 0; n < neurons.Count; n++) //for each neuron
 			{
-				sumError += neurons[n].calcError(target[n]);
+				sumError += neurons[n].CalcError(target[n]);
 			}
 			return sumError;
 		}
 
 		//hidden layer error = f'(output) * Sum(downstream error * downstream weight)
-		public void calcErrors(Layer layer)
+		public void CalcErrors(Layer layer)
 		{
 			for (int n = 0; n < neurons.Count; n++) //for each neuron
 			{
-				for (int dn = 0; dn < layer.neurons.Count(); dn++)
+				for (int dn = 0; dn < layer.neurons.Count; dn++)
 				{
-					neurons[n].calcError(layer.errors, layer.weights[dn]);
+					neurons[n].CalcError(layer.errors, layer.weights[dn]);
 				}
 			}
 		}
 
-		public void assignInputs(List<double> trainIn)
+		public void AssignInputs(List<double> trainIn)
 		{
 			for (int n = 0; n < neurons.Count; n++) //for each neuron
 			{
-				neurons[n].assignInputs(trainIn);
+				neurons[n].AssignInputs(trainIn);
 			}
 		}
 
-		public void adjustWeights()
+		public void AdjustWeights()
 		{
 			for (int n = 0; n < neurons.Count; n++) //for each neuron
 			{
-				neurons[n].adjustWeights();
+				neurons[n].AdjustWeights();
 			}
 		}
+
+		#endregion
+
 
 		//private void Copy(Layer lr)
 		//{

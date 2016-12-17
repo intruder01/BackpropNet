@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TrainingControllerConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <tgtEpochs>5000</tgtEpochs>
+  <tgtRmsError>0.001</tgtRmsError>
+  <trainPasses>1</trainPasses>
+  <trainParamFrom>0.1</trainParamFrom>
+  <trainParamTo>1</trainParamTo>
+  <trainParamStep>0.1</trainParamStep>
+  <trainEpochs>7</trainEpochs>
+  <bStepAutoAdvance>true</bStepAutoAdvance>
+</TrainingControllerConfig>

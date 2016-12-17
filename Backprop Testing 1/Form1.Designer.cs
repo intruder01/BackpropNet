@@ -29,19 +29,19 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series17 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.Series series18 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.Series series21 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series22 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.Series series23 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.Series series24 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			this.txtBox1 = new System.Windows.Forms.TextBox();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			this.tbOutputBox = new System.Windows.Forms.TextBox();
 			this.btnBaseline = new System.Windows.Forms.Button();
 			this.btnStop = new System.Windows.Forms.Button();
 			this.chartTrain = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -52,9 +52,9 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.txtLearnRate = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.txtErrTarget = new System.Windows.Forms.TextBox();
+			this.txtTgtRMSError = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.txtMaxEpochs = new System.Windows.Forms.TextBox();
+			this.txtTgtMaxEpochs = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.lbActLayer = new System.Windows.Forms.ListBox();
 			this.networkBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -73,8 +73,6 @@
 			this.saveCfgToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.test2ReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.test3WriteNet2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.readTrainingFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -101,14 +99,19 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+			this.label14 = new System.Windows.Forms.Label();
+			this.chkCaseAutoAdvance = new System.Windows.Forms.CheckBox();
+			this.label13 = new System.Windows.Forms.Label();
+			this.btnTrainBatch = new System.Windows.Forms.Button();
+			this.label12 = new System.Windows.Forms.Label();
+			this.txtNumEpochs = new System.Windows.Forms.TextBox();
 			this.btnEpoch = new System.Windows.Forms.Button();
 			this.label11 = new System.Windows.Forms.Label();
 			this.udCaseNumber = new System.Windows.Forms.NumericUpDown();
 			this.btnBwdPass = new System.Windows.Forms.Button();
 			this.btnFwdPass = new System.Windows.Forms.Button();
 			this.btnStep = new System.Windows.Forms.Button();
-			this.txtNumEpochs = new System.Windows.Forms.TextBox();
-			this.label12 = new System.Windows.Forms.Label();
+			this.btnClearText = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.chartTrain)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.networkBindingSource)).BeginInit();
@@ -134,29 +137,29 @@
 			((System.ComponentModel.ISupportInitialize)(this.udCaseNumber)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// txtBox1
+			// tbOutputBox
 			// 
-			this.txtBox1.Location = new System.Drawing.Point(3, 3);
-			this.txtBox1.Multiline = true;
-			this.txtBox1.Name = "txtBox1";
-			this.txtBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtBox1.Size = new System.Drawing.Size(177, 180);
-			this.txtBox1.TabIndex = 0;
-			this.txtBox1.WordWrap = false;
+			this.tbOutputBox.Location = new System.Drawing.Point(3, 3);
+			this.tbOutputBox.Multiline = true;
+			this.tbOutputBox.Name = "tbOutputBox";
+			this.tbOutputBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.tbOutputBox.Size = new System.Drawing.Size(207, 180);
+			this.tbOutputBox.TabIndex = 0;
+			this.tbOutputBox.WordWrap = false;
 			// 
 			// btnBaseline
 			// 
-			this.btnBaseline.Location = new System.Drawing.Point(202, 166);
+			this.btnBaseline.Location = new System.Drawing.Point(216, 166);
 			this.btnBaseline.Name = "btnBaseline";
 			this.btnBaseline.Size = new System.Drawing.Size(66, 23);
 			this.btnBaseline.TabIndex = 1;
-			this.btnBaseline.Text = "baseline";
+			this.btnBaseline.Text = "Train Base";
 			this.btnBaseline.UseVisualStyleBackColor = true;
-			this.btnBaseline.Click += new System.EventHandler(this.btnBaseline_Click);
+			this.btnBaseline.Click += new System.EventHandler(this.btnTrainBaseline_Click);
 			// 
 			// btnStop
 			// 
-			this.btnStop.Location = new System.Drawing.Point(237, 156);
+			this.btnStop.Location = new System.Drawing.Point(237, 163);
 			this.btnStop.Name = "btnStop";
 			this.btnStop.Size = new System.Drawing.Size(75, 23);
 			this.btnStop.TabIndex = 2;
@@ -166,23 +169,23 @@
 			// 
 			// chartTrain
 			// 
-			chartArea7.Name = "ChartArea1";
-			this.chartTrain.ChartAreas.Add(chartArea7);
+			chartArea1.Name = "ChartArea1";
+			this.chartTrain.ChartAreas.Add(chartArea1);
 			this.chartTrain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chartTrain.Location = new System.Drawing.Point(3, 3);
 			this.chartTrain.Name = "chartTrain";
-			series17.ChartArea = "ChartArea1";
-			series17.Color = System.Drawing.Color.LightSalmon;
-			series17.Name = "AveNumEpochs";
-			series18.BorderWidth = 3;
-			series18.ChartArea = "ChartArea1";
-			series18.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series18.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-			series18.Name = "PercGood";
-			series18.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
-			this.chartTrain.Series.Add(series17);
-			this.chartTrain.Series.Add(series18);
-			this.chartTrain.Size = new System.Drawing.Size(443, 225);
+			series1.ChartArea = "ChartArea1";
+			series1.Color = System.Drawing.Color.LightSalmon;
+			series1.Name = "AveNumEpochs";
+			series2.BorderWidth = 3;
+			series2.ChartArea = "ChartArea1";
+			series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+			series2.Name = "PercGood";
+			series2.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+			this.chartTrain.Series.Add(series1);
+			this.chartTrain.Series.Add(series2);
+			this.chartTrain.Size = new System.Drawing.Size(442, 247);
 			this.chartTrain.TabIndex = 3;
 			this.chartTrain.Text = "chart1";
 			// 
@@ -191,7 +194,7 @@
 			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
 			this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-			this.pictureBox1.Location = new System.Drawing.Point(203, 3);
+			this.pictureBox1.Location = new System.Drawing.Point(217, 3);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(65, 157);
 			this.pictureBox1.TabIndex = 4;
@@ -199,7 +202,7 @@
 			// 
 			// btnTrain
 			// 
-			this.btnTrain.Location = new System.Drawing.Point(237, 127);
+			this.btnTrain.Location = new System.Drawing.Point(237, 134);
 			this.btnTrain.Name = "btnTrain";
 			this.btnTrain.Size = new System.Drawing.Size(75, 23);
 			this.btnTrain.TabIndex = 5;
@@ -211,7 +214,7 @@
 			// 
 			this.txtSchema.Location = new System.Drawing.Point(78, 13);
 			this.txtSchema.Name = "txtSchema";
-			this.txtSchema.Size = new System.Drawing.Size(106, 20);
+			this.txtSchema.Size = new System.Drawing.Size(70, 20);
 			this.txtSchema.TabIndex = 6;
 			// 
 			// label1
@@ -226,7 +229,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(26, 46);
+			this.label2.Location = new System.Drawing.Point(26, 40);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(51, 13);
 			this.label2.TabIndex = 9;
@@ -234,58 +237,58 @@
 			// 
 			// txtLearnRate
 			// 
-			this.txtLearnRate.Location = new System.Drawing.Point(78, 39);
+			this.txtLearnRate.Location = new System.Drawing.Point(78, 33);
 			this.txtLearnRate.Name = "txtLearnRate";
-			this.txtLearnRate.Size = new System.Drawing.Size(106, 20);
+			this.txtLearnRate.Size = new System.Drawing.Size(35, 20);
 			this.txtLearnRate.TabIndex = 8;
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(339, 30);
+			this.label3.Location = new System.Drawing.Point(360, 30);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(49, 13);
+			this.label3.Size = new System.Drawing.Size(29, 13);
 			this.label3.TabIndex = 11;
-			this.label3.Text = "err target";
+			this.label3.Text = "Error";
 			// 
-			// txtErrTarget
+			// txtTgtRMSError
 			// 
-			this.txtErrTarget.Location = new System.Drawing.Point(389, 23);
-			this.txtErrTarget.Name = "txtErrTarget";
-			this.txtErrTarget.Size = new System.Drawing.Size(52, 20);
-			this.txtErrTarget.TabIndex = 10;
+			this.txtTgtRMSError.Location = new System.Drawing.Point(389, 23);
+			this.txtTgtRMSError.Name = "txtTgtRMSError";
+			this.txtTgtRMSError.Size = new System.Drawing.Size(52, 20);
+			this.txtTgtRMSError.TabIndex = 10;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(324, 56);
+			this.label4.Location = new System.Drawing.Point(346, 50);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(64, 13);
+			this.label4.Size = new System.Drawing.Size(43, 13);
 			this.label4.TabIndex = 13;
-			this.label4.Text = "max epochs";
+			this.label4.Text = "Epochs";
 			// 
-			// txtMaxEpochs
+			// txtTgtMaxEpochs
 			// 
-			this.txtMaxEpochs.Location = new System.Drawing.Point(389, 49);
-			this.txtMaxEpochs.Name = "txtMaxEpochs";
-			this.txtMaxEpochs.Size = new System.Drawing.Size(52, 20);
-			this.txtMaxEpochs.TabIndex = 12;
+			this.txtTgtMaxEpochs.Location = new System.Drawing.Point(389, 43);
+			this.txtTgtMaxEpochs.Name = "txtTgtMaxEpochs";
+			this.txtTgtMaxEpochs.Size = new System.Drawing.Size(52, 20);
+			this.txtTgtMaxEpochs.TabIndex = 12;
 			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(30, 105);
+			this.label5.Location = new System.Drawing.Point(80, 86);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(46, 13);
+			this.label5.Size = new System.Drawing.Size(50, 13);
 			this.label5.TabIndex = 15;
-			this.label5.Text = "act func";
+			this.label5.Text = "Act Func";
 			// 
 			// lbActLayer
 			// 
 			this.lbActLayer.DataSource = this.networkBindingSource;
 			this.lbActLayer.DisplayMember = "Idx";
 			this.lbActLayer.FormattingEnabled = true;
-			this.lbActLayer.Location = new System.Drawing.Point(78, 104);
+			this.lbActLayer.Location = new System.Drawing.Point(42, 101);
 			this.lbActLayer.Name = "lbActLayer";
 			this.lbActLayer.Size = new System.Drawing.Size(35, 82);
 			this.lbActLayer.TabIndex = 16;
@@ -298,7 +301,7 @@
 			// lbActFunction
 			// 
 			this.lbActFunction.FormattingEnabled = true;
-			this.lbActFunction.Location = new System.Drawing.Point(119, 104);
+			this.lbActFunction.Location = new System.Drawing.Point(83, 101);
 			this.lbActFunction.Name = "lbActFunction";
 			this.lbActFunction.Size = new System.Drawing.Size(65, 82);
 			this.lbActFunction.TabIndex = 17;
@@ -307,7 +310,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(25, 72);
+			this.label6.Location = new System.Drawing.Point(25, 60);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(52, 13);
 			this.label6.TabIndex = 19;
@@ -315,9 +318,9 @@
 			// 
 			// txtWeitghtDivider
 			// 
-			this.txtWeitghtDivider.Location = new System.Drawing.Point(78, 65);
+			this.txtWeitghtDivider.Location = new System.Drawing.Point(78, 53);
 			this.txtWeitghtDivider.Name = "txtWeitghtDivider";
-			this.txtWeitghtDivider.Size = new System.Drawing.Size(106, 20);
+			this.txtWeitghtDivider.Size = new System.Drawing.Size(35, 20);
 			this.txtWeitghtDivider.TabIndex = 18;
 			// 
 			// menuStrip1
@@ -357,9 +360,7 @@
             this.openCfgToolStripMenuItem,
             this.saveCfgToolStripMenuItem,
             this.toolStripSeparator3,
-            this.testToolStripMenuItem,
-            this.test2ReadToolStripMenuItem,
-            this.test3WriteNet2ToolStripMenuItem});
+            this.testToolStripMenuItem});
 			this.configToolStripMenuItem.Name = "configToolStripMenuItem";
 			this.configToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
 			this.configToolStripMenuItem.Text = "&Network";
@@ -373,7 +374,6 @@
 			// 
 			// saveDefaultToolStripMenuItem
 			// 
-			this.saveDefaultToolStripMenuItem.Enabled = false;
 			this.saveDefaultToolStripMenuItem.Name = "saveDefaultToolStripMenuItem";
 			this.saveDefaultToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
 			this.saveDefaultToolStripMenuItem.Text = "&Save Network";
@@ -417,20 +417,6 @@
 			this.testToolStripMenuItem.Text = "Test 1 - write Baseline";
 			this.testToolStripMenuItem.Click += new System.EventHandler(this.testWriteBaseline_Click);
 			// 
-			// test2ReadToolStripMenuItem
-			// 
-			this.test2ReadToolStripMenuItem.Name = "test2ReadToolStripMenuItem";
-			this.test2ReadToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-			this.test2ReadToolStripMenuItem.Text = "Test 2 - read net2";
-			this.test2ReadToolStripMenuItem.Click += new System.EventHandler(this.test2Read_Click);
-			// 
-			// test3WriteNet2ToolStripMenuItem
-			// 
-			this.test3WriteNet2ToolStripMenuItem.Name = "test3WriteNet2ToolStripMenuItem";
-			this.test3WriteNet2ToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-			this.test3WriteNet2ToolStripMenuItem.Text = "Test 3 - write net2";
-			this.test3WriteNet2ToolStripMenuItem.Click += new System.EventHandler(this.test3Write_Click);
-			// 
 			// dataToolStripMenuItem
 			// 
 			this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -462,9 +448,9 @@
 			// 
 			// btnCreateNet
 			// 
-			this.btnCreateNet.Location = new System.Drawing.Point(28, 192);
+			this.btnCreateNet.Location = new System.Drawing.Point(42, 192);
 			this.btnCreateNet.Name = "btnCreateNet";
-			this.btnCreateNet.Size = new System.Drawing.Size(156, 23);
+			this.btnCreateNet.Size = new System.Drawing.Size(106, 23);
 			this.btnCreateNet.TabIndex = 21;
 			this.btnCreateNet.Text = "Create";
 			this.btnCreateNet.UseVisualStyleBackColor = true;
@@ -490,7 +476,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(243, 52);
+			this.label8.Location = new System.Drawing.Point(243, 46);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(30, 13);
 			this.label8.TabIndex = 25;
@@ -498,7 +484,7 @@
 			// 
 			// txtTrainParamFrom
 			// 
-			this.txtTrainParamFrom.Location = new System.Drawing.Point(276, 49);
+			this.txtTrainParamFrom.Location = new System.Drawing.Point(276, 43);
 			this.txtTrainParamFrom.Name = "txtTrainParamFrom";
 			this.txtTrainParamFrom.Size = new System.Drawing.Size(36, 20);
 			this.txtTrainParamFrom.TabIndex = 24;
@@ -507,7 +493,7 @@
 			// label9
 			// 
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(243, 71);
+			this.label9.Location = new System.Drawing.Point(243, 65);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(20, 13);
 			this.label9.TabIndex = 27;
@@ -515,7 +501,7 @@
 			// 
 			// txtTrainParamTo
 			// 
-			this.txtTrainParamTo.Location = new System.Drawing.Point(276, 68);
+			this.txtTrainParamTo.Location = new System.Drawing.Point(276, 62);
 			this.txtTrainParamTo.Name = "txtTrainParamTo";
 			this.txtTrainParamTo.Size = new System.Drawing.Size(36, 20);
 			this.txtTrainParamTo.TabIndex = 26;
@@ -524,7 +510,7 @@
 			// label10
 			// 
 			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(243, 91);
+			this.label10.Location = new System.Drawing.Point(243, 85);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(29, 13);
 			this.label10.TabIndex = 29;
@@ -532,7 +518,7 @@
 			// 
 			// txtTrainParamStep
 			// 
-			this.txtTrainParamStep.Location = new System.Drawing.Point(276, 88);
+			this.txtTrainParamStep.Location = new System.Drawing.Point(276, 82);
 			this.txtTrainParamStep.Name = "txtTrainParamStep";
 			this.txtTrainParamStep.Size = new System.Drawing.Size(36, 20);
 			this.txtTrainParamStep.TabIndex = 28;
@@ -541,7 +527,7 @@
 			// cbDispUpdate
 			// 
 			this.cbDispUpdate.AutoSize = true;
-			this.cbDispUpdate.Location = new System.Drawing.Point(144, 6);
+			this.cbDispUpdate.Location = new System.Drawing.Point(173, 6);
 			this.cbDispUpdate.Name = "cbDispUpdate";
 			this.cbDispUpdate.Size = new System.Drawing.Size(15, 14);
 			this.cbDispUpdate.TabIndex = 30;
@@ -550,7 +536,7 @@
 			// 
 			// btnTest
 			// 
-			this.btnTest.Location = new System.Drawing.Point(237, 185);
+			this.btnTest.Location = new System.Drawing.Point(237, 192);
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(75, 23);
 			this.btnTest.TabIndex = 31;
@@ -568,7 +554,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(457, 257);
+			this.tabControl1.Size = new System.Drawing.Size(456, 279);
 			this.tabControl1.TabIndex = 32;
 			// 
 			// tabTrain
@@ -577,7 +563,7 @@
 			this.tabTrain.Location = new System.Drawing.Point(4, 22);
 			this.tabTrain.Name = "tabTrain";
 			this.tabTrain.Padding = new System.Windows.Forms.Padding(3);
-			this.tabTrain.Size = new System.Drawing.Size(449, 231);
+			this.tabTrain.Size = new System.Drawing.Size(448, 253);
 			this.tabTrain.TabIndex = 0;
 			this.tabTrain.Text = "Train";
 			this.tabTrain.UseVisualStyleBackColor = true;
@@ -588,35 +574,35 @@
 			this.tabTest.Location = new System.Drawing.Point(4, 22);
 			this.tabTest.Name = "tabTest";
 			this.tabTest.Padding = new System.Windows.Forms.Padding(3);
-			this.tabTest.Size = new System.Drawing.Size(449, 217);
+			this.tabTest.Size = new System.Drawing.Size(448, 253);
 			this.tabTest.TabIndex = 1;
 			this.tabTest.Text = "Test";
 			this.tabTest.UseVisualStyleBackColor = true;
 			// 
 			// chartTest
 			// 
-			chartArea8.Name = "ChartArea1";
-			this.chartTest.ChartAreas.Add(chartArea8);
+			chartArea2.Name = "ChartArea1";
+			this.chartTest.ChartAreas.Add(chartArea2);
 			this.chartTest.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chartTest.Location = new System.Drawing.Point(3, 3);
 			this.chartTest.Name = "chartTest";
-			series19.ChartArea = "ChartArea1";
-			series19.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series19.Color = System.Drawing.Color.LightSalmon;
-			series19.Name = "trainOutputs";
-			series20.BorderWidth = 2;
-			series20.ChartArea = "ChartArea1";
-			series20.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series20.Name = "nodeOutputs";
-			series21.ChartArea = "ChartArea1";
-			series21.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series21.Color = System.Drawing.Color.Red;
-			series21.Name = "nodeErrors";
-			series21.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
-			this.chartTest.Series.Add(series19);
-			this.chartTest.Series.Add(series20);
-			this.chartTest.Series.Add(series21);
-			this.chartTest.Size = new System.Drawing.Size(443, 211);
+			series3.ChartArea = "ChartArea1";
+			series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series3.Color = System.Drawing.Color.LightSalmon;
+			series3.Name = "trainOutputs";
+			series4.BorderWidth = 2;
+			series4.ChartArea = "ChartArea1";
+			series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series4.Name = "nodeOutputs";
+			series5.ChartArea = "ChartArea1";
+			series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series5.Color = System.Drawing.Color.Red;
+			series5.Name = "nodeErrors";
+			series5.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+			this.chartTest.Series.Add(series3);
+			this.chartTest.Series.Add(series4);
+			this.chartTest.Series.Add(series5);
+			this.chartTest.Size = new System.Drawing.Size(442, 247);
 			this.chartTest.TabIndex = 4;
 			this.chartTest.Text = "chart1";
 			// 
@@ -626,35 +612,35 @@
 			this.tabNet1.Location = new System.Drawing.Point(4, 22);
 			this.tabNet1.Name = "tabNet1";
 			this.tabNet1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabNet1.Size = new System.Drawing.Size(449, 217);
+			this.tabNet1.Size = new System.Drawing.Size(448, 253);
 			this.tabNet1.TabIndex = 2;
 			this.tabNet1.Text = "Error";
 			this.tabNet1.UseVisualStyleBackColor = true;
 			// 
 			// chartError
 			// 
-			chartArea9.Name = "ChartArea1";
-			this.chartError.ChartAreas.Add(chartArea9);
+			chartArea3.Name = "ChartArea1";
+			this.chartError.ChartAreas.Add(chartArea3);
 			this.chartError.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chartError.Location = new System.Drawing.Point(3, 3);
 			this.chartError.Name = "chartError";
-			series22.ChartArea = "ChartArea1";
-			series22.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series22.Color = System.Drawing.Color.LightSalmon;
-			series22.Name = "trainOutputs";
-			series23.BorderWidth = 2;
-			series23.ChartArea = "ChartArea1";
-			series23.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series23.Name = "nodeOutputs";
-			series24.ChartArea = "ChartArea1";
-			series24.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-			series24.Color = System.Drawing.Color.Red;
-			series24.Name = "nodeErrors";
-			series24.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
-			this.chartError.Series.Add(series22);
-			this.chartError.Series.Add(series23);
-			this.chartError.Series.Add(series24);
-			this.chartError.Size = new System.Drawing.Size(443, 211);
+			series6.ChartArea = "ChartArea1";
+			series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series6.Color = System.Drawing.Color.LightSalmon;
+			series6.Name = "trainOutputs";
+			series7.BorderWidth = 2;
+			series7.ChartArea = "ChartArea1";
+			series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series7.Name = "nodeOutputs";
+			series8.ChartArea = "ChartArea1";
+			series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+			series8.Color = System.Drawing.Color.Red;
+			series8.Name = "nodeErrors";
+			series8.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
+			this.chartError.Series.Add(series6);
+			this.chartError.Series.Add(series7);
+			this.chartError.Series.Add(series8);
+			this.chartError.Size = new System.Drawing.Size(442, 247);
 			this.chartError.TabIndex = 5;
 			this.chartError.Text = "chart1";
 			// 
@@ -662,7 +648,7 @@
 			// 
 			this.tabWatch.Location = new System.Drawing.Point(4, 22);
 			this.tabWatch.Name = "tabWatch";
-			this.tabWatch.Size = new System.Drawing.Size(449, 217);
+			this.tabWatch.Size = new System.Drawing.Size(448, 253);
 			this.tabWatch.TabIndex = 3;
 			this.tabWatch.Text = "Watch";
 			this.tabWatch.UseVisualStyleBackColor = true;
@@ -677,7 +663,7 @@
 			this.propertyGrid1.Name = "propertyGrid1";
 			this.propertyGrid1.ReadOnly = false;
 			this.propertyGrid1.ShowNonPublic = false;
-			this.propertyGrid1.Size = new System.Drawing.Size(467, 257);
+			this.propertyGrid1.Size = new System.Drawing.Size(468, 279);
 			this.propertyGrid1.SplitterPosition = 187;
 			this.propertyGrid1.SplitterRatio = 0.4F;
 			this.propertyGrid1.TabIndex = 33;
@@ -697,8 +683,8 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-			this.splitContainer1.Size = new System.Drawing.Size(932, 508);
-			this.splitContainer1.SplitterDistance = 259;
+			this.splitContainer1.Size = new System.Drawing.Size(932, 537);
+			this.splitContainer1.SplitterDistance = 281;
 			this.splitContainer1.TabIndex = 36;
 			// 
 			// splitContainer2
@@ -715,8 +701,8 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
-			this.splitContainer2.Size = new System.Drawing.Size(932, 259);
-			this.splitContainer2.SplitterDistance = 459;
+			this.splitContainer2.Size = new System.Drawing.Size(932, 281);
+			this.splitContainer2.SplitterDistance = 458;
 			this.splitContainer2.TabIndex = 0;
 			// 
 			// splitContainer3
@@ -728,6 +714,10 @@
 			// 
 			// splitContainer3.Panel1
 			// 
+			this.splitContainer3.Panel1.Controls.Add(this.label14);
+			this.splitContainer3.Panel1.Controls.Add(this.chkCaseAutoAdvance);
+			this.splitContainer3.Panel1.Controls.Add(this.label13);
+			this.splitContainer3.Panel1.Controls.Add(this.btnTrainBatch);
 			this.splitContainer3.Panel1.Controls.Add(this.label12);
 			this.splitContainer3.Panel1.Controls.Add(this.txtNumEpochs);
 			this.splitContainer3.Panel1.Controls.Add(this.btnEpoch);
@@ -736,8 +726,8 @@
 			this.splitContainer3.Panel1.Controls.Add(this.btnBwdPass);
 			this.splitContainer3.Panel1.Controls.Add(this.btnFwdPass);
 			this.splitContainer3.Panel1.Controls.Add(this.btnStep);
-			this.splitContainer3.Panel1.Controls.Add(this.txtErrTarget);
-			this.splitContainer3.Panel1.Controls.Add(this.txtMaxEpochs);
+			this.splitContainer3.Panel1.Controls.Add(this.txtTgtRMSError);
+			this.splitContainer3.Panel1.Controls.Add(this.txtTgtMaxEpochs);
 			this.splitContainer3.Panel1.Controls.Add(this.btnTest);
 			this.splitContainer3.Panel1.Controls.Add(this.txtWeitghtDivider);
 			this.splitContainer3.Panel1.Controls.Add(this.btnStop);
@@ -764,17 +754,73 @@
 			// 
 			// splitContainer3.Panel2
 			// 
+			this.splitContainer3.Panel2.Controls.Add(this.btnClearText);
 			this.splitContainer3.Panel2.Controls.Add(this.cbDispUpdate);
-			this.splitContainer3.Panel2.Controls.Add(this.txtBox1);
+			this.splitContainer3.Panel2.Controls.Add(this.tbOutputBox);
 			this.splitContainer3.Panel2.Controls.Add(this.pictureBox1);
 			this.splitContainer3.Panel2.Controls.Add(this.btnBaseline);
-			this.splitContainer3.Size = new System.Drawing.Size(932, 245);
-			this.splitContainer3.SplitterDistance = 487;
+			this.splitContainer3.Size = new System.Drawing.Size(932, 252);
+			this.splitContainer3.SplitterDistance = 494;
 			this.splitContainer3.TabIndex = 0;
+			// 
+			// label14
+			// 
+			this.label14.AutoSize = true;
+			this.label14.Location = new System.Drawing.Point(457, 120);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(29, 13);
+			this.label14.TabIndex = 43;
+			this.label14.Text = "Auto";
+			// 
+			// chkCaseAutoAdvance
+			// 
+			this.chkCaseAutoAdvance.AutoSize = true;
+			this.chkCaseAutoAdvance.Location = new System.Drawing.Point(462, 138);
+			this.chkCaseAutoAdvance.Name = "chkCaseAutoAdvance";
+			this.chkCaseAutoAdvance.Size = new System.Drawing.Size(15, 14);
+			this.chkCaseAutoAdvance.TabIndex = 42;
+			this.chkCaseAutoAdvance.UseVisualStyleBackColor = true;
+			this.chkCaseAutoAdvance.CheckedChanged += new System.EventHandler(this.chkCaseAutoAdvance_CheckedChanged);
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Location = new System.Drawing.Point(39, 86);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(33, 13);
+			this.label13.TabIndex = 41;
+			this.label13.Text = "Layer";
+			// 
+			// btnTrainBatch
+			// 
+			this.btnTrainBatch.Location = new System.Drawing.Point(366, 75);
+			this.btnTrainBatch.Name = "btnTrainBatch";
+			this.btnTrainBatch.Size = new System.Drawing.Size(75, 23);
+			this.btnTrainBatch.TabIndex = 40;
+			this.btnTrainBatch.Text = "Train Batch";
+			this.btnTrainBatch.UseVisualStyleBackColor = true;
+			this.btnTrainBatch.Click += new System.EventHandler(this.btnTrainBatch_Click);
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(331, 120);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(43, 13);
+			this.label12.TabIndex = 39;
+			this.label12.Text = "Epochs";
+			// 
+			// txtNumEpochs
+			// 
+			this.txtNumEpochs.Location = new System.Drawing.Point(334, 134);
+			this.txtNumEpochs.Name = "txtNumEpochs";
+			this.txtNumEpochs.Size = new System.Drawing.Size(45, 20);
+			this.txtNumEpochs.TabIndex = 38;
+			this.txtNumEpochs.TextChanged += new System.EventHandler(this.txtNumEpochs_TextChanged);
 			// 
 			// btnEpoch
 			// 
-			this.btnEpoch.Location = new System.Drawing.Point(353, 155);
+			this.btnEpoch.Location = new System.Drawing.Point(334, 160);
 			this.btnEpoch.Name = "btnEpoch";
 			this.btnEpoch.Size = new System.Drawing.Size(55, 23);
 			this.btnEpoch.TabIndex = 37;
@@ -785,7 +831,7 @@
 			// label11
 			// 
 			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(422, 115);
+			this.label11.Location = new System.Drawing.Point(403, 120);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(31, 13);
 			this.label11.TabIndex = 36;
@@ -793,7 +839,7 @@
 			// 
 			// udCaseNumber
 			// 
-			this.udCaseNumber.Location = new System.Drawing.Point(424, 130);
+			this.udCaseNumber.Location = new System.Drawing.Point(405, 135);
 			this.udCaseNumber.Maximum = new decimal(new int[] {
             1,
             0,
@@ -811,9 +857,9 @@
 			// 
 			// btnBwdPass
 			// 
-			this.btnBwdPass.Location = new System.Drawing.Point(420, 214);
+			this.btnBwdPass.Location = new System.Drawing.Point(442, 190);
 			this.btnBwdPass.Name = "btnBwdPass";
-			this.btnBwdPass.Size = new System.Drawing.Size(40, 23);
+			this.btnBwdPass.Size = new System.Drawing.Size(38, 24);
 			this.btnBwdPass.TabIndex = 34;
 			this.btnBwdPass.Text = "Bwd";
 			this.btnBwdPass.UseVisualStyleBackColor = true;
@@ -821,9 +867,9 @@
 			// 
 			// btnFwdPass
 			// 
-			this.btnFwdPass.Location = new System.Drawing.Point(420, 185);
+			this.btnFwdPass.Location = new System.Drawing.Point(401, 190);
 			this.btnFwdPass.Name = "btnFwdPass";
-			this.btnFwdPass.Size = new System.Drawing.Size(40, 23);
+			this.btnFwdPass.Size = new System.Drawing.Size(38, 24);
 			this.btnFwdPass.TabIndex = 33;
 			this.btnFwdPass.Text = "Fwd";
 			this.btnFwdPass.UseVisualStyleBackColor = true;
@@ -831,36 +877,29 @@
 			// 
 			// btnStep
 			// 
-			this.btnStep.Location = new System.Drawing.Point(420, 156);
+			this.btnStep.Location = new System.Drawing.Point(401, 161);
 			this.btnStep.Name = "btnStep";
-			this.btnStep.Size = new System.Drawing.Size(55, 23);
+			this.btnStep.Size = new System.Drawing.Size(79, 23);
 			this.btnStep.TabIndex = 32;
 			this.btnStep.Text = "Step";
 			this.btnStep.UseVisualStyleBackColor = true;
 			this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
 			// 
-			// txtNumEpochs
+			// btnClearText
 			// 
-			this.txtNumEpochs.Location = new System.Drawing.Point(353, 129);
-			this.txtNumEpochs.Name = "txtNumEpochs";
-			this.txtNumEpochs.Size = new System.Drawing.Size(45, 20);
-			this.txtNumEpochs.TabIndex = 38;
-			this.txtNumEpochs.TextChanged += new System.EventHandler(this.txtNumEpochs_TextChanged);
-			// 
-			// label12
-			// 
-			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(350, 115);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(43, 13);
-			this.label12.TabIndex = 39;
-			this.label12.Text = "Epochs";
+			this.btnClearText.Location = new System.Drawing.Point(70, 185);
+			this.btnClearText.Name = "btnClearText";
+			this.btnClearText.Size = new System.Drawing.Size(66, 23);
+			this.btnClearText.TabIndex = 31;
+			this.btnClearText.Text = "Clear";
+			this.btnClearText.UseVisualStyleBackColor = true;
+			this.btnClearText.Click += new System.EventHandler(this.btnClearText_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(932, 532);
+			this.ClientSize = new System.Drawing.Size(932, 561);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
@@ -902,7 +941,7 @@
 		private System.Windows.Forms.Button btnBaseline;
 		private System.Windows.Forms.Button btnStop;
 		private System.Windows.Forms.DataVisualization.Charting.Chart chartTrain;
-		public System.Windows.Forms.TextBox txtBox1;
+		public System.Windows.Forms.TextBox tbOutputBox;
 		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Button btnTrain;
 		private System.Windows.Forms.TextBox txtSchema;
@@ -910,9 +949,9 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox txtLearnRate;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox txtErrTarget;
+		private System.Windows.Forms.TextBox txtTgtRMSError;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.TextBox txtMaxEpochs;
+		private System.Windows.Forms.TextBox txtTgtMaxEpochs;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.ListBox lbActLayer;
 		private System.Windows.Forms.BindingSource networkBindingSource;
@@ -932,8 +971,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem test2ReadToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem test3WriteNet2ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openCfgToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveCfgToolStripMenuItem;
 		private System.Windows.Forms.Label label7;
@@ -967,6 +1004,11 @@
 		private System.Windows.Forms.Button btnEpoch;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TextBox txtNumEpochs;
+		private System.Windows.Forms.Button btnClearText;
+		private System.Windows.Forms.Button btnTrainBatch;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.CheckBox chkCaseAutoAdvance;
 	}
 }
 

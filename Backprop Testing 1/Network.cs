@@ -24,7 +24,8 @@ namespace BackpropNet
 
 		//fields re-created during construction
 		//[XmlIgnore]
-		
+
+		#region Constructors
 
 		public Network()
 		{
@@ -35,10 +36,14 @@ namespace BackpropNet
 			cfg = new NetworkConfig();
 		}
 
+		#endregion
+
+
+		#region Creation 
 
 		//create net from cfg
 		//use when creating new network from UI fields
-		public void createNetStructure()
+		public void CreateNetwork()
 		{
 
 			//network schema
@@ -49,7 +54,7 @@ namespace BackpropNet
 
 
 			//create network layers
-			createLayers(cfg.schema);
+			CreateLayers(cfg.schema);
 
 			//create network weights
 			//createNetWeights(schema);
@@ -103,10 +108,10 @@ namespace BackpropNet
 		//finalize network references
 		//use after basic network structure is created either from UI fields
 		//or from file
-		public void finalizeNetStructure()
+		public void FinalizeNetwork()
 		{
-			connectLayers();
-			createActivations();
+			ConnectLayers();
+			CreateActivations();
 
 			////random weights - same as baseline
 			//nrn(0, 0).randomizeWeights(1.11);
@@ -116,7 +121,7 @@ namespace BackpropNet
 		}
 
 		//default baseline network structure 2-2-1, logistic etc..
-		public void createNetStructureBaseline()
+		public void CreateNetworkBaseline()
 		{
 
 			//trainData = new TrainingData();
@@ -128,9 +133,9 @@ namespace BackpropNet
 			cfg.weightDivider = 10;
 
 			//create network layers
-			createLayers(cfg.schema);
+			CreateLayers(cfg.schema);
 
-			connectLayers();
+			ConnectLayers();
 
 			//default activation logistic
 			for (int l = 0; l < layers.Count; l++)
@@ -139,12 +144,98 @@ namespace BackpropNet
 			}
 
 			//random weights
-			nrn(0, 0).randomizeWeights(1.11);
-			nrn(0, 1).randomizeWeights(-2.23);
-			nrn(1, 0).randomizeWeights(2.34);
+			nrn(0, 0).RandomizeWeights(1.11);
+			nrn(0, 1).RandomizeWeights(-2.23);
+			nrn(1, 0).RandomizeWeights(2.34);
 
 		}
 
+		private void CreateLayers(List<int> schema)
+		{
+			layers = new List<Layer>();
+			//first value in schema is number of inputs (no layer)
+			int numLayers = schema.Count - 1;
+			for (int n = 0; n < numLayers; n++)
+			{
+				layers.Add(new Layer(this, schema, n));      //layer
+			}
+		}
+
+		private void ConnectLayers()
+		{
+			//network-layer-neuron references 
+			for (int l = 0; l < layers.Count; l++)
+			{
+				layers[l].net = this; // Layer.net reference
+				layers[l].outputs.Clear();
+				layers[l].errors.Clear();
+				int numNodes = layers[l].neurons.Count;
+				for (int n = 0; n < numNodes; n++)
+				{
+					layers[l].outputs.Add(0.0); //build outputs list
+					layers[l].errors.Add(0.0);  //build errors list
+
+					nrn(l, n).layer = layers[l]; //Neuron.layer reference
+					nrn(l, n).weights = layers[l].weights[n]; // Neuron.weights reference
+				}
+			}
+
+			//inter-layer references
+			//neuron.inputs references
+			//Layer 0 - no connections to prev output
+			//		  - inputs assigned directly
+			//Layer	1 - connect inputs to layer 0 outputs 
+			//etc...
+
+			for (int l = 1; l < layers.Count; l++)
+			{
+				int numNodes = layers[l].neurons.Count;
+				for (int n = 0; n < numNodes; n++)
+				{
+					//reference neuron inputs to previous layer's outputs
+					nrn(l, n).inputs = layers[l - 1].outputs;
+				}
+			}
+		}
+
+		public void CreateActivations()
+		{
+			foreach (Layer l in layers)
+			{
+				l.actFunc = Activation.getInstance(l.actFunc.funcName);
+			}
+		}
+
+		public void RandomizeWeights(Random r)
+		{
+			for (int l = 0; l < layers.Count; l++)
+			{
+				layers[l].RandomizeWeights(r);
+			}
+		}
+
+		#endregion
+
+
+		#region Access Methods  
+
+
+		public Neuron nrn(int layerIdx, int neuronIdx)
+		{
+			return this.layers[layerIdx].neurons[neuronIdx];
+		}
+
+		public List<double> wt(int layerIdx, int weightIdx)
+		{
+			return this.layers[layerIdx].weights[weightIdx];
+		}
+
+		#endregion
+
+
+		#region Training
+
+		
 		//public double train(TextBox txtBox)
 		//{
 		//	epoch = 0;
@@ -295,19 +386,19 @@ namespace BackpropNet
 		//			{
 		//				layers[l].calcOutputs();
 		//			}
-					
+
 		//			//2) back propagation (adjusts weights)
 
 		//			//adjusts the weights of the output layer, based on it's error
 		//			//trainErrors[i] = layers[layers.Count - 1].calcErrors(trainData.getCase(i).Outputs);
 		//			trainCtrl.Data.Cases[i].totalError = layers[layers.Count - 1].calcErrors(trainCtrl.Data.Cases[i].trainOutputs);
 		//			layers[layers.Count - 1].adjustWeights();
-					
+
 		//			//save output data in trainer
 		//			trainCtrl.Data.Cases[i].saveNodeOutputs(layers[layers.Count - 1].outputs);
 		//			trainCtrl.Data.Cases[i].saveNodeErrors(layers[layers.Count - 1].errors);
 		//			trainCtrl.Data.Cases[i].calcRmsError();
-					
+
 		//			//then adjusts the hidden layer' weights, based on their errors
 		//			for (int l = layers.Count - 2; l >= 0; l--)
 		//			{
@@ -396,94 +487,22 @@ namespace BackpropNet
 		//	return rmsError;
 		//}
 
-		private void createLayers(List<int> schema)
-		{
-			layers = new List<Layer>();
-			//first value in schema is number of inputs (no layer)
-			int numLayers = schema.Count - 1;	
-			for (int n = 0; n < numLayers; n++)
-			{
-				layers.Add(new Layer(this, schema, n));      //layer
-			}
-		}
-
-		public Neuron nrn(int layerIdx, int neuronIdx)
-		{
-			return this.layers[layerIdx].neurons[neuronIdx];
-		}
-
-		public List<double> wt(int layerIdx, int weightIdx)
-		{
-			return this.layers[layerIdx].weights[weightIdx];
-		}
-
-		private void connectLayers()
-		{
-			//network-layer-neuron references 
-			for (int l = 0; l < layers.Count(); l++)
-			{
-				layers[l].net = this; // Layer.net reference
-				layers[l].outputs.Clear();
-				layers[l].errors.Clear();
-				int numNodes = layers[l].neurons.Count();
-				for (int n = 0; n < numNodes; n++)
-				{
-					layers[l].outputs.Add(0.0); //build outputs list
-					layers[l].errors.Add(0.0);  //build errors list
-
-					nrn(l, n).layer = layers[l]; //Neuron.layer reference
-					nrn(l, n).weights = layers[l].weights[n]; // Neuron.weights reference
-				}
-			}
-
-			//inter-layer references
-			//neuron.inputs references
-			//Layer 0 - no connections to prev output
-			//		  - inputs assigned directly
-			//Layer	1 - connect inputs to layer 0 outputs 
-			//etc...
-
-			for (int l = 1; l < layers.Count(); l++)
-			{
-				int numNodes = layers[l].neurons.Count();
-				for (int n = 0; n < numNodes; n++)
-				{
-					//reference neuron inputs to previous layer's outputs
-					nrn(l, n).inputs = layers[l - 1].outputs;
-				}
-			}
-		}
-
-		public void createActivations()
-		{
-			foreach (Layer l in layers)
-			{
-				l.actFunc = Activation.getInstance(l.actFunc.funcName);
-			}
-		}
-
-		public void randomizeWeights(Random r)
-		{
-			for (int l = 0; l < layers.Count; l++)
-			{
-				layers[l].randomizeWeights(r);
-			}
-		}
+		#endregion
 
 
 		#region XML persist
 
-		public void readConfig(string filename)
+		public void ReadConfig(string filename)
 		{
 			cfg.readXML(filename);
 		}
 
-		public void writeConfig(string filename)
+		public void WriteConfig(string filename)
 		{
 			cfg.writeXML(filename);
 		}
 
-		public void readXML(string filename)
+		public void ReadXML(string filename)
 		{
 			Network net = null;
 			
@@ -496,7 +515,7 @@ namespace BackpropNet
 		}
 
 		//write new file
-		public void writeXML(string filename)
+		public void WriteXML(string filename)
 		{
 			using (TextWriter writer = new StreamWriter(filename))
 			{
@@ -519,10 +538,7 @@ namespace BackpropNet
 			AutoMapper.Mapper.Map<Network, Network>(src, dest);
 		}
 
-
-
 		#endregion
-
 
 
 	}

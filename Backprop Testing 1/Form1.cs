@@ -15,7 +15,7 @@ namespace BackpropNet
 
 	public partial class Form1 : Form
 	{
-		public Network net, net2;
+		public Network net;
 		private TrainingController trainCtrl;
 		private TrainingController testCtrl;
 		public static Random r = new Random();
@@ -25,12 +25,8 @@ namespace BackpropNet
 		public string cfgFilename;	//last open config file
 		public string netFilename;	//last open net file
 		public string trainFilename;//last open train data file
-		//public int trainPasses;		//number of training passes for each value of param
-		//public double trainParamFrom;//training param start value
-		//public double trainParamTo;	//training param end value
-		//public double trainParamStep;   //training param step value
-		public bool bDispUpdate;    //display enable
-		public string testFilename;//last open run data file
+		public bool bDispEnabled;   //display updates are enabled
+		public string testFilename; //last open run data file
 
 		private int winSizeWidth, winSizeHeight;
 		private int splitContainer1Pos;
@@ -45,11 +41,10 @@ namespace BackpropNet
 			readSettings();	//get registry settings
 
 			net = new Network(0);
-			net2 = new Network(0);
 			trainCtrl = new TrainingController();
 			testCtrl = new TrainingController();
 
-			//activation listboxes
+			//activation list boxes
 			this.lbActLayer.SelectedIndexChanged -= new System.EventHandler(this.lbActLayer_SelectedIndexChanged);
 			this.lbActFunction.SelectedIndexChanged -= new System.EventHandler(this.lbActFunction_SelectedIndexChanged);
 
@@ -67,7 +62,7 @@ namespace BackpropNet
 			this.lbActFunction.SelectedIndexChanged += new System.EventHandler(this.lbActFunction_SelectedIndexChanged);
 
 			//UI fields
-			cbDispUpdate.Checked = bDispUpdate;
+			cbDispUpdate.Checked = bDispEnabled;
 
 			this.Width = winSizeWidth;
 			this.Height = winSizeHeight;
@@ -76,15 +71,15 @@ namespace BackpropNet
 			splitContainer3.SplitterDistance = splitContainer3Pos;
 
 			//load last set of files
-			net.readXML(netFilename);
-			net.finalizeNetStructure();
+			net.ReadXML(netFilename);
+			net.FinalizeNetwork();
 			propertyGrid1.SelectObject(net, false, 200);
 			ConfigToUI();
-			trainCtrl.readXML(filesLocation + "\\trainCtrlr.xml");	//train parameters
-			trainCtrl.Data.readCSV(trainFilename);       //train data
+			trainCtrl.ReadConfig(filesLocation + "trainCtrlrConfig.xml");  //train parameters
+			trainCtrl.ReadData(trainFilename);       //train data
 			TrainCtrlrToUI();
-			testCtrl.readXML(filesLocation + "\\testCtrlr.xml");		//test parameters
-			testCtrl.Data.readCSV(testFilename);            //test data
+			testCtrl.ReadConfig(filesLocation + "testCtrlrConfig.xml");	//test parameters
+			testCtrl.ReadData(testFilename);         //test data
 			UpdateTitle();
 
 		}
@@ -218,7 +213,7 @@ namespace BackpropNet
 		//			chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = aveEpochs;
 		//		chartTrain.ChartAreas["ChartArea1"].AxisY2.Minimum = 0;
 		//		chartTrain.ChartAreas["ChartArea1"].AxisY2.Maximum = 100;
-				
+
 		//		chartTrain.Series["PercGood"].Points.AddXY(param, percGood);
 		//		chartTrain.Series["AveNumEpochs"].Points.AddXY(param, aveEpochs);
 		//		//txtBox1.AppendText(String.Format("Param: {0:F2}  Passes: {1}  Good: {2}  %: {3:F2}  AveEpochs {4}\n", param, numPasses, numGood, percGood, aveEpochs));
@@ -231,31 +226,27 @@ namespace BackpropNet
 		//	}
 		//}
 
-		private void btnTrain_Click(object sender, EventArgs e)
+		private void btnTrainBatch_Click(object sender, EventArgs e)
 		{
-			int numPasses = 0;
-			int numGood = 0;
-			int aveNumEpochs = 0;
-
 			btnStop.Focus();
 			btnStop.Refresh();
 			bStopRequest = false;
-			txtBox1.Text = "";
+			tbOutputBox.Text = "";
 
 			chartTrain.Series["PercGood"].Points.Clear();
 			chartTrain.Series["AveNumEpochs"].Points.Clear();
-			chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = 0;
-
-			net.finalizeNetStructure();
-
+			chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = trainCtrl.Cfg.tgtEpochs;
+			
 			//update parameters from UI
+			ConfigFromUI();
+			net.FinalizeNetwork();
 			TrainCtrlrFromUI();
-
-			for (double par = trainCtrl.trainParamFrom; par <= trainCtrl.trainParamTo; par += trainCtrl.trainParamStep)
+			
+			for (double par = trainCtrl.Cfg.trainParamFrom; par <= trainCtrl.Cfg.trainParamTo; par += trainCtrl.Cfg.trainParamStep)
 			{
-				numPasses = 0;
-				numGood = 0;
-				aveNumEpochs = 0;
+				trainCtrl.NumPasses = 0;
+				trainCtrl.NumGood = 0;
+				trainCtrl.AveNumEpochs = 0;
 
 				//transfer parameter to network
 				//net.cfg.learnRate = par;
@@ -263,21 +254,18 @@ namespace BackpropNet
 				ConfigToUI();
 				TrainCtrlrToUI();
 
-				for (int pass = 0; pass < trainCtrl.trainPasses; pass++)
+				for (int pass = 0; pass < trainCtrl.Cfg.trainPasses; pass++)
 				{
-					numPasses++;
+					trainCtrl.NumPasses++;
 
 					//if doing parameter run - randomize each pass
-					if (trainCtrl.trainParamFrom != trainCtrl.trainParamTo)
-						net.randomizeWeights(r);
+					//if (trainCtrl.cfg.trainParamFrom != trainCtrl.cfg.trainParamTo)
+						net.RandomizeWeights(r);
 
-					//if (net.train(this, txtBox1, bDispUpdate, trainCtrl) < trainCtrl.tgtRmsError)
-					//	numGood++;
+					if (trainCtrl.Train(net, this, tbOutputBox, bDispEnabled))
+						trainCtrl.NumGood++;
 
-					if (trainCtrl.Train(net, this, txtBox1, bDispUpdate) < trainCtrl.tgtRmsError)
-						numGood++;
-					
-					aveNumEpochs += trainCtrl.numEpochsRan;
+					trainCtrl.AveNumEpochs += trainCtrl.NumEpochsRan;
 
 					if (bStopRequest)
 						break;
@@ -285,26 +273,73 @@ namespace BackpropNet
 					Application.DoEvents();
 				}
 
-				double percGood = (double)numGood / (double)numPasses * 100.0;
-				aveNumEpochs /= numPasses;
+				double percGood = (double)trainCtrl.NumGood / (double)trainCtrl.NumPasses * 100.0;
+				trainCtrl.AveNumEpochs /= trainCtrl.NumPasses;
 
 				chartTrain.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
 				chartTrain.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
-				if (aveNumEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
-					chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = aveNumEpochs;
+				if (trainCtrl.AveNumEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
+					chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = trainCtrl.AveNumEpochs;
 				chartTrain.ChartAreas["ChartArea1"].AxisY2.Minimum = 0;
 				chartTrain.ChartAreas["ChartArea1"].AxisY2.Maximum = 100;
 
 				chartTrain.Series["PercGood"].Points.AddXY(par, percGood);
-				chartTrain.Series["AveNumEpochs"].Points.AddXY(par, aveNumEpochs);
+				chartTrain.Series["AveNumEpochs"].Points.AddXY(par, trainCtrl.AveNumEpochs);
 				//txtBox1.AppendText(String.Format("Param: {0:F2}  Passes: {1}  Good: {2}  %: {3:F2}  AveEpochs {4}\n", param, numPasses, numGood, percGood, aveEpochs));
 
 				if (bStopRequest)
 				{
-					txtBox1.AppendText("   STOPPED\n");
+					tbOutputBox.AppendText("   STOPPED\n");
 					break;
 				}
 			}
+		}
+
+		private void btnTrain_Click(object sender, EventArgs e)
+		{
+			btnStop.Focus();
+			btnStop.Refresh();
+			bStopRequest = false;
+			tbOutputBox.Text = "";
+
+			chartTrain.Series["PercGood"].Points.Clear();
+			chartTrain.Series["AveNumEpochs"].Points.Clear();
+			chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = trainCtrl.Cfg.tgtEpochs;
+
+			net.FinalizeNetwork();
+			TrainCtrlrFromUI();
+
+			trainCtrl.NumPasses = 0;
+			trainCtrl.NumGood = 0;
+			trainCtrl.AveNumEpochs = 0;
+
+			ConfigToUI();
+			TrainCtrlrToUI();
+
+			trainCtrl.NumPasses++;
+
+			//if doing parameter run - randomize each pass
+			//if (trainCtrl.cfg.trainParamFrom != trainCtrl.cfg.trainParamTo)
+				net.RandomizeWeights(r);
+
+			if (trainCtrl.Train(net, this, tbOutputBox, bDispEnabled))
+				trainCtrl.NumGood++;
+
+			trainCtrl.AveNumEpochs += trainCtrl.NumEpochsRan;
+			trainCtrl.PercGood = (double)trainCtrl.NumGood / (double)trainCtrl.NumPasses * 100.0;
+			trainCtrl.AveNumEpochs /= trainCtrl.NumPasses;
+
+			chartTrain.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
+			chartTrain.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
+			if (trainCtrl.AveNumEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
+				chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = trainCtrl.AveNumEpochs;
+			chartTrain.ChartAreas["ChartArea1"].AxisY2.Minimum = 0;
+			chartTrain.ChartAreas["ChartArea1"].AxisY2.Maximum = 100;
+
+			chartTrain.Series["PercGood"].Points.AddXY(0, trainCtrl.PercGood);
+			chartTrain.Series["AveNumEpochs"].Points.AddXY(0, trainCtrl.AveNumEpochs);
+			//txtBox1.AppendText(String.Format("Param: {0:F2}  Passes: {1}  Good: {2}  %: {3:F2}  AveEpochs {4}\n", param, numPasses, numGood, percGood, aveEpochs));
+
 		}
 
 		private void btnTest_Click(object sender, EventArgs e)
@@ -312,7 +347,7 @@ namespace BackpropNet
 			btnStop.Focus();
 			btnStop.Refresh();
 			bStopRequest = false;
-			txtBox1.Text = "";
+			tbOutputBox.Text = "";
 
 			//tabControl1.SelectTab("tabTest");
 			chartTest.Series["trainOutputs"].Points.Clear();
@@ -327,11 +362,11 @@ namespace BackpropNet
 			ConfigToUI();
 			TrainCtrlrFromUI();
 
-			net.finalizeNetStructure();
+			net.FinalizeNetwork();
 
 
 			//net.test(txtBox1, bDispUpdate, testCtrl);
-			testCtrl.Test(net, this, txtBox1, bDispUpdate);
+			testCtrl.Test(net, this, tbOutputBox, bDispEnabled);
 			Application.DoEvents();
 
 
@@ -360,12 +395,8 @@ namespace BackpropNet
 			}
 		}
 
-		private void btnBaseline_Click(object sender, EventArgs e)
+		private void btnTrainBaseline_Click(object sender, EventArgs e)
 		{
-			int numPasses = 0;
-			int numGood = 0;
-			int aveEpochs = 0;
-
 			btnStop.Focus();
 			btnStop.Refresh();
 			bStopRequest = false;
@@ -383,38 +414,37 @@ namespace BackpropNet
 
 			net.cfg.learnRate = 0.8;
 			net.cfg.weightDivider = 10;
-			net.createNetStructureBaseline();
+			net.CreateNetworkBaseline();
 
 			trainCtrl.Data.makeXORData();
-			trainCtrl.tgtRmsError = 0.001;
-			trainCtrl.tgtEpochs = 5000;
+			trainCtrl.Cfg.tgtRmsError = 0.001;
+			trainCtrl.Cfg.tgtEpochs = 5000;
 
-			numPasses = 1;
-			numGood = 0;
-			aveEpochs = 0;
+			trainCtrl.NumPasses = 1;
+			trainCtrl.NumGood = 0;
+			trainCtrl.AveNumEpochs = 0;
 
 
-			if (trainCtrl.Train(net, this, txtBox1, bDispUpdate) < trainCtrl.tgtRmsError)
-				numGood++;
+			if (trainCtrl.Train(net, this, tbOutputBox, bDispEnabled))
+				trainCtrl.NumGood++;
 
-			aveEpochs += trainCtrl.numEpochsRan;
+			trainCtrl.AveNumEpochs += trainCtrl.NumEpochsRan;
 
 			//txtBox1.AppendText(String.Format("Attempt  {0}   Good {1}    Good% {2:F2}\n", i, numGood, (double)numGood/(double)numAttempts * 100.0));
 			Application.DoEvents();
-
-
-			double percGood = (double)numGood / (double)numPasses * 100.0;
-			aveEpochs /= numPasses;
+			
+			double percGood = (double)trainCtrl.NumGood / (double)trainCtrl.NumPasses * 100.0;
+			trainCtrl.AveNumEpochs /= trainCtrl.NumPasses;
 
 			chartTrain.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
 			chartTrain.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
-			if (aveEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
-				chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = aveEpochs;
+			if (trainCtrl.AveNumEpochs > chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum)
+				chartTrain.ChartAreas["ChartArea1"].AxisY.Maximum = trainCtrl.AveNumEpochs;
 			chartTrain.ChartAreas["ChartArea1"].AxisY2.Minimum = 0;
 			chartTrain.ChartAreas["ChartArea1"].AxisY2.Maximum = 100;
 
 			chartTrain.Series["PercGood"].Points.AddXY(1, percGood);
-			chartTrain.Series["AveNumEpochs"].Points.AddXY(1, aveEpochs);
+			chartTrain.Series["AveNumEpochs"].Points.AddXY(1, trainCtrl.AveNumEpochs);
 			//txtBox1.AppendText(String.Format("Param: {0:F2}  Passes: {1}  Good: {2}  %: {3:F2}  AveEpochs {4}\n", param, numPasses, numGood, percGood, aveEpochs));
 
 		}
@@ -422,25 +452,25 @@ namespace BackpropNet
 		private void btnStop_Click(object sender, EventArgs e)
 		{
 			bStopRequest = true;
-			txtBox1.AppendText("   STOP\n"); 
+			tbOutputBox.AppendText("   STOP\n"); 
 			Application.DoEvents();
 		}
 
 		private void btnEpoch_Click(object sender, EventArgs e)
 		{
-			trainCtrl.Epoch(net, this, txtBox1, bDispUpdate);
+			trainCtrl.Epoch(net, this, tbOutputBox, bDispEnabled);
 		}
 		private void btnStep_Click(object sender, EventArgs e)
 		{
-			trainCtrl.Step(net, this, txtBox1, bDispUpdate);
+			trainCtrl.Step(net, this, tbOutputBox, bDispEnabled);
 		}
 		private void btnFwdPass_Click(object sender, EventArgs e)
 		{
-			trainCtrl.ForwardPass(net, this, txtBox1, bDispUpdate);
+			trainCtrl.ForwardPass(net, this, tbOutputBox, bDispEnabled);
 		}
 		private void btnBwdPass_Click(object sender, EventArgs e)
 		{
-			trainCtrl.BackwardPass(net, this, txtBox1, bDispUpdate);
+			trainCtrl.BackwardPass(net, this, tbOutputBox, bDispEnabled);
 		}
 
 		private void lbActLayer_SelectedIndexChanged(object sender, EventArgs e)
@@ -518,27 +548,29 @@ namespace BackpropNet
 
 		public void TrainCtrlrFromUI()
 		{
-			trainCtrl.tgtRmsError = Convert.ToDouble(txtErrTarget.Text);//0.001;
-			trainCtrl.tgtEpochs = Convert.ToInt32(txtMaxEpochs.Text); //5000;
-			trainCtrl.trainPasses = Convert.ToInt32(txtTrainNumPasses.Text);
-			trainCtrl.trainParamFrom = Convert.ToDouble(txtTrainParamFrom.Text);
-			trainCtrl.trainParamTo = Convert.ToDouble(txtTrainParamTo.Text);
-			trainCtrl.trainParamStep = Convert.ToDouble(txtTrainParamStep.Text);
-			trainCtrl.currCase = Convert.ToInt32(udCaseNumber.Value);//case number up/dn
-			trainCtrl.trainEpochs = Convert.ToInt32(txtNumEpochs.Text);
+			trainCtrl.Cfg.tgtRmsError = Convert.ToDouble(txtTgtRMSError.Text);//0.001;
+			trainCtrl.Cfg.tgtEpochs = Convert.ToInt32(txtTgtMaxEpochs.Text); //5000;
+			trainCtrl.Cfg.trainPasses = Convert.ToInt32(txtTrainNumPasses.Text);
+			trainCtrl.Cfg.trainParamFrom = Convert.ToDouble(txtTrainParamFrom.Text);
+			trainCtrl.Cfg.trainParamTo = Convert.ToDouble(txtTrainParamTo.Text);
+			trainCtrl.Cfg.trainParamStep = Convert.ToDouble(txtTrainParamStep.Text);
+			trainCtrl.Cfg.trainEpochs = Convert.ToInt32(txtNumEpochs.Text);
+			trainCtrl.CurrCase = Convert.ToInt32(udCaseNumber.Value);//case number up/dn
+			trainCtrl.Cfg.bStepAutoAdvance = Convert.ToBoolean(chkCaseAutoAdvance.Checked);
 		}
 		public void TrainCtrlrToUI()
 		{
-			txtErrTarget.Text = trainCtrl.tgtRmsError.ToString();//0.001;
-			txtMaxEpochs.Text = trainCtrl.tgtEpochs.ToString();//5000;
-			txtTrainNumPasses.Text = trainCtrl.trainPasses.ToString();
-			txtTrainParamFrom.Text = trainCtrl.trainParamFrom.ToString();
-			txtTrainParamTo.Text = trainCtrl.trainParamTo.ToString();
-			txtTrainParamStep.Text = trainCtrl.trainParamStep.ToString();
-			udCaseNumber.Value = trainCtrl.currCase;    //case number up/dn
+			txtTgtRMSError.Text = trainCtrl.Cfg.tgtRmsError.ToString();//0.001;
+			txtTgtMaxEpochs.Text = trainCtrl.Cfg.tgtEpochs.ToString();//5000;
+			txtTrainNumPasses.Text = trainCtrl.Cfg.trainPasses.ToString();
+			txtTrainParamFrom.Text = trainCtrl.Cfg.trainParamFrom.ToString();
+			txtTrainParamTo.Text = trainCtrl.Cfg.trainParamTo.ToString();
+			txtTrainParamStep.Text = trainCtrl.Cfg.trainParamStep.ToString();
+			txtNumEpochs.Text = trainCtrl.NumEpochsRan.ToString();
+			udCaseNumber.Value = trainCtrl.CurrCase;    //case number up/dn
 			udCaseNumber.Minimum = -1; //allow wrap around
 			udCaseNumber.Maximum = trainCtrl.Data.Cases.Count; //allow wrap around
-			txtNumEpochs.Text = trainCtrl.trainEpochs.ToString();
+			chkCaseAutoAdvance.Checked = trainCtrl.Cfg.bStepAutoAdvance;
 
 		}
 
@@ -563,8 +595,8 @@ namespace BackpropNet
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			trainCtrl.writeXML(filesLocation + "\\trainCtrlr.xml");
-			testCtrl.writeXML(filesLocation + "\\testCtrlr.xml");
+			trainCtrl.WriteConfig(filesLocation + "trainCtrlrConfig.xml");
+			testCtrl.WriteConfig(filesLocation + "testCtrlrConfig.xml");
 			saveSettings();
 		}
 
@@ -575,12 +607,12 @@ namespace BackpropNet
 			dlg.Filter = "XML Files|*.xml|All Files|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
+				filesLocation = Path.GetDirectoryName(dlg.FileName) + "\\";
 				netFilename = Path.GetFullPath(dlg.FileName);
 				saveSettings();
-				net.readConfig(dlg.FileName);
-				net.createNetStructure();
-				net.finalizeNetStructure();
+				net.ReadConfig(dlg.FileName);
+				net.CreateNetwork();
+				net.FinalizeNetwork();
 				ConfigToUI();
 			}
 			UpdateTitle();
@@ -593,10 +625,10 @@ namespace BackpropNet
 			dlg.Filter = "XML Files|*.xml|All Files|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
+				filesLocation = Path.GetDirectoryName(dlg.FileName) + "\\";
 				cfgFilename = Path.GetFullPath(dlg.FileName);
 				saveSettings();
-				net.writeConfig(dlg.FileName);
+				net.WriteConfig(dlg.FileName);
 			}
 		}
 
@@ -608,11 +640,11 @@ namespace BackpropNet
 			dlg.Filter = "XML Files|*.xml|All Files|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
+				filesLocation = Path.GetDirectoryName(dlg.FileName) + "\\";
 				netFilename = Path.GetFullPath(dlg.FileName);
 				saveSettings();
-				net.readXML(dlg.FileName);
-				net.finalizeNetStructure();
+				net.ReadXML(dlg.FileName);
+				net.FinalizeNetwork();
 				ConfigToUI();
 				propertyGrid1.SelectObject(net, false, 200);
 			}
@@ -621,9 +653,10 @@ namespace BackpropNet
 
 		private void saveNetwork_Click(object sender, EventArgs e)
 		{
-			//net.cfg = readConfigUI();	//update from fields
-			//net.writeConfig(lastNetFilename);
-			//net.writeXML(netFilename);
+			if(MessageBox.Show(@"Save current network ?" + Environment.NewLine + netFilename, "Save Network", MessageBoxButtons.OKCancel) == DialogResult.OK)
+			{
+				net.WriteXML(filesLocation + netFilename);
+			}
 		}
 
 		private void saveNetworkAs_Click(object sender, EventArgs e)
@@ -634,12 +667,12 @@ namespace BackpropNet
 			dlg.Filter = "XML Files|*.xml|All Files|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
+				filesLocation = Path.GetDirectoryName(dlg.FileName) + "\\";
 				netFilename = Path.GetFullPath(dlg.FileName);
 				saveSettings();
 				//net.cfg = readConfigUI();   //update from fields
 				//net.writeConfig(dlg.FileName);
-				net.writeXML(dlg.FileName);
+				net.WriteXML(dlg.FileName);
 			}
 		}
 		private void readTrainData_Click(object sender, EventArgs e)
@@ -650,10 +683,10 @@ namespace BackpropNet
 			dlg.Filter = "CSV Files|*.csv|All Files|*.*";
 			if(dlg.ShowDialog() == DialogResult.OK)
 			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
+				filesLocation = Path.GetDirectoryName(dlg.FileName) + "\\";
 				trainFilename = Path.GetFullPath(dlg.FileName);
 				saveSettings();
-				trainCtrl.Data.readCSV(dlg.FileName);
+				trainCtrl.Data.ReadCSV(dlg.FileName);
 			}
 			UpdateTitle();
 		}
@@ -666,14 +699,13 @@ namespace BackpropNet
 			dlg.Filter = "CSV Files|*.csv|All Files|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
+				filesLocation = Path.GetDirectoryName(dlg.FileName) + "\\";
 				testFilename = Path.GetFullPath(dlg.FileName);
 				saveSettings();
-				testCtrl.Data.readCSV(dlg.FileName);
+				testCtrl.Data.ReadCSV(dlg.FileName);
 			}
 			UpdateTitle();
 		}
-
 
 
 		private void saveSettings()
@@ -692,7 +724,6 @@ namespace BackpropNet
 			key.SetValue("splitContainer3Pos", splitContainer3.SplitterDistance.ToString(), RegistryValueKind.String);
 
 		}
-
 		private void readSettings()
 		{
 			RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Backprop");
@@ -701,111 +732,97 @@ namespace BackpropNet
 			netFilename = (String)key.GetValue("netFilename", "");
 			trainFilename = (String)key.GetValue("trainFilename", "");
 			testFilename = (String)key.GetValue("runFilename", "");
-			bDispUpdate = Convert.ToBoolean(key.GetValue("bDispUpdate", "true"));
+			bDispEnabled = Convert.ToBoolean(key.GetValue("bDispUpdate", "true"));
 			winSizeWidth = Convert.ToInt32(key.GetValue("winSizeWidth", "800"));
 			winSizeHeight = Convert.ToInt32(key.GetValue("winSizeHeight", "700"));
 			splitContainer1Pos = Convert.ToInt32(key.GetValue("splitContainer1Pos", "400"));
 			splitContainer2Pos = Convert.ToInt32(key.GetValue("splitContainer2Pos", "400"));
 			splitContainer3Pos = Convert.ToInt32(key.GetValue("splitContainer3Pos", "400"));
 		}
-
 		private void btnCreateNet_Click(object sender, EventArgs e)
 		{
 			//read UI fields
 			net.cfg = ConfigFromUI();
-			net.createNetStructure();
-			net.finalizeNetStructure();
-			net.randomizeWeights(r);
+			net.CreateNetwork();
+			net.FinalizeNetwork();
+			net.RandomizeWeights(r);
 			ConfigToUI();
 			propertyGrid1.SelectObject(net, false, 200);
 		}
-
 		private void testWriteBaseline_Click(object sender, EventArgs e)
 		{
 			//create net
-			net.createNetStructureBaseline();
+			net.CreateNetworkBaseline();
 
 			//write net
-			net.writeXML("C:\\Users\\jsadowski.GFPDIV\\Documents\\Projects\\BrainNet Project\\Backprop\\Backprop Test 1\\Backprop Testing 1\\files\\XOR 2-2-1 TEST.xml");
+			net.WriteXML("C:\\Users\\jsadowski.GFPDIV\\Documents\\Projects\\BrainNet Project\\Backprop\\Backprop Test 1\\Backprop Testing 1\\files\\XOR 2-2-1 TEST.xml");
 		}
-		private void test2Read_Click(object sender, EventArgs e)
-		{
-			//read net2
-			net2.readXML("C:\\Users\\jsadowski.GFPDIV\\Documents\\Projects\\BrainNet Project\\Backprop\\Backprop Test 1\\Backprop Testing 1\\files\\XOR 2-2-1 TEST.xml");
-			
-		}
-		private void test3Write_Click(object sender, EventArgs e)
-		{
-			//write net2
-			SaveFileDialog dlg = new SaveFileDialog();
-			dlg.InitialDirectory = filesLocation;
-			dlg.Filter = "XML Files|*.xml|All Files|*.*";
-			if (dlg.ShowDialog() == DialogResult.OK)
-			{
-				filesLocation = Path.GetDirectoryName(dlg.FileName);
-				netFilename = Path.GetFullPath(dlg.FileName);
-				saveSettings();
-				net2.writeXML(dlg.FileName);
-			}
-		}
-
-
 		private void txtNumTrainPasses_TextChanged(object sender, EventArgs e)
 		{
 			int i;
 			if (Int32.TryParse(txtTrainNumPasses.Text, out i))
-				trainCtrl.trainPasses = i;
+				trainCtrl.Cfg.trainPasses = i;
 			else
-				trainCtrl.trainPasses = 1;
+				trainCtrl.Cfg.trainPasses = 1;
 		}
 		private void txtTrainParamFrom_TextChanged(object sender, EventArgs e)
 		{
 			double d;
 			if (Double.TryParse(txtTrainParamFrom.Text, out d))
-				trainCtrl.trainParamFrom = d;
+				trainCtrl.Cfg.trainParamFrom = d;
 			else
-				trainCtrl.trainParamFrom = 0.1;
+				trainCtrl.Cfg.trainParamFrom = 0.1;
 		}
 		private void txtTrainParamTo_TextChanged(object sender, EventArgs e)
 		{
 			double d;
 			if (Double.TryParse(txtTrainParamTo.Text, out d))
-				trainCtrl.trainParamTo = d;
+				trainCtrl.Cfg.trainParamTo = d;
 			else
-				trainCtrl.trainParamTo = 0.1;
+				trainCtrl.Cfg.trainParamTo = 0.1;
 		}
 
 		private void udCaseNumber_ValueChanged(object sender, EventArgs e)
 		{
-			trainCtrl.currCase = (int)udCaseNumber.Value;
-			if (trainCtrl.currCase >= trainCtrl.Data.Cases.Count)
-				trainCtrl.currCase = 0;
-			if (trainCtrl.currCase < 0)
-				trainCtrl.currCase = trainCtrl.Data.Cases.Count - 1;
-			udCaseNumber.Value = trainCtrl.currCase;
+			trainCtrl.CurrCase = (int)udCaseNumber.Value;
+			if (trainCtrl.CurrCase >= trainCtrl.Data.Cases.Count)
+				trainCtrl.CurrCase = 0;
+			if (trainCtrl.CurrCase < 0)
+				trainCtrl.CurrCase = trainCtrl.Data.Cases.Count - 1;
+			udCaseNumber.Value = trainCtrl.CurrCase;
 		}
 
 		private void txtNumEpochs_TextChanged(object sender, EventArgs e)
 		{
 			int i;
 			if (Int32.TryParse(txtNumEpochs.Text, out i))
-				trainCtrl.trainEpochs = i;
+				trainCtrl.Cfg.trainEpochs = i;
 			else
-				trainCtrl.trainEpochs = 1;
+				trainCtrl.Cfg.trainEpochs = 1;
+		}
+
+		private void btnClearText_Click(object sender, EventArgs e)
+		{
+			tbOutputBox.Clear();
 		}
 
 		private void txtTrainParamStep_TextChanged(object sender, EventArgs e)
 		{
 			double d;
 			if (Double.TryParse(txtTrainParamStep.Text, out d))
-				trainCtrl.trainParamStep = d;
+				trainCtrl.Cfg.trainParamStep = d;
 			else
-				trainCtrl.trainParamStep = 0.1;
+				trainCtrl.Cfg.trainParamStep = 0.1;
+		}
+
+		private void chkCaseAutoAdvance_CheckedChanged(object sender, EventArgs e)
+		{
+			trainCtrl.Cfg.bStepAutoAdvance = chkCaseAutoAdvance.Checked;
 		}
 
 		private void cbDispUpdate_CheckedChanged(object sender, EventArgs e)
 		{
-			bDispUpdate = cbDispUpdate.Checked;
+			bDispEnabled = cbDispUpdate.Checked;
 		}
 
 	}

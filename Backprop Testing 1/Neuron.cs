@@ -24,10 +24,6 @@ namespace BackpropNet
 		public List<double> inputs; //ref to Layer array	
 		[XmlIgnore]
 		public List<double> weights;//ref to Layer array
-
-		public Neuron()
-		{
-		}
 		[XmlIgnore]
 		public double output //ref to Layer array
 		{
@@ -42,18 +38,28 @@ namespace BackpropNet
 		}
 
 
+		#region Constructors
+		public Neuron()
+		{
+		}
 		public Neuron(Layer lyr, int neuronIndex)
 		{
 			layer = lyr;
 			Idx = neuronIndex;
 		}
 
-		public void assignInputs(List<double> trainIn)
+		#endregion
+
+
+		#region Training
+
+
+		public void AssignInputs(List<double> trainIn)
 		{
 			inputs = trainIn;
 		}
 
-		public double calcOutput()
+		public double CalcOutput()
 		{
 			output = 0.0;
 			for (int i = 0; i < inputs.Count; i++)
@@ -66,19 +72,20 @@ namespace BackpropNet
 		}
 
 		//output neuron error = f'(output) * (target - output)
-		public double calcError(double target)
+		public double CalcError(double target)
 		{
 			//nrn(1, 0).error = act.derivative(nrn(1, 0).output) * (trainOut[i] - nrn(1, 0).output);
-			error = layer.actFunc.derivative(output) * (target - output);
+			//error = layer.actFunc.derivative(output) * (target - output);
+			error = layer.actFunc.derivative(output) * (output - target);
 			return error;
 		}
 
-		//hidden neuron error = f'(output) * Sum(downstream error * downstream weight)
-		public double calcError(List<double> errors, List<double> weights)
+		//hidden neuron error = f'(output) * Σ(downstream error * downstream weight)
+		public double CalcError(List<double> errors, List<double> weights)
 		{
 			//nrn(0,0).error = act.derivative(nrn(0,0).output) * nrn(1,0).error * nrn(1,0).weights[0];
 			double sum = 0.0;
-			for (int n = 0; n < errors.Count(); n++)
+			for (int n = 0; n < errors.Count; n++)
 				sum += errors[n] * weights[this.Idx]; //weights from n-th downstream neuron to this hidden neuron
 			error = layer.actFunc.derivative(output) * sum;
 			return error;
@@ -86,15 +93,15 @@ namespace BackpropNet
 
 		//hidden neuron proportional error
 		//
-		//hidden neuron error = f'(output) * Sum(downstream error * downstream weight)
-		public double calcErrorProp(List<double> errors, List<double> weights)
+		//hidden neuron error = f'(output) * Σ(downstream error * downstream weight)
+		public double CalcErrorProp(List<double> errors, List<double> weights)
 		{
 			int thisLayerIdx = Idx;
 			int layerIdx = layer.Idx;
 
 			//nrn(0,0).error = act.derivative(nrn(0,0).output) * nrn(1,0).error * nrn(1,0).weights[0];
 			double sum = 0.0;
-			for (int n = 0; n < errors.Count(); n++)
+			for (int n = 0; n < errors.Count; n++)
 				sum += errors[n] * weights[this.Idx]; //weights from n-th downstream neuron to this hidden neuron
 			error = layer.actFunc.derivative(output) * sum;
 
@@ -102,7 +109,7 @@ namespace BackpropNet
 			return error;
 		}
 
-		public void randomizeWeights(Random r)
+		public void RandomizeWeights(Random r)
 		{
 			////weights[0] = (Form1.r.NextDouble() - 0.5) / 10;
 			////weights[1] = (Form1.r.NextDouble() - 0.5) / 10;
@@ -127,7 +134,7 @@ namespace BackpropNet
 			biasWeight = (r.NextDouble() - 0.5) / layer.net.cfg.weightDivider;
 		}
 
-		public void randomizeWeights(double seed)
+		public void RandomizeWeights(double seed)
 		{
 			//weights[0] = (Form1.r.NextDouble() - 0.5) / 10;
 			//weights[1] = (Form1.r.NextDouble() - 0.5) / 10;
@@ -146,14 +153,16 @@ namespace BackpropNet
 			biasWeight /= layer.net.cfg.weightDivider;
 		}
 
-		public void adjustWeights()
+		public void AdjustWeights()
 		{
-			for (int i = 0; i < inputs.Count(); i++)
+			for (int i = 0; i < inputs.Count; i++)
 			{
 				weights[i] += layer.net.cfg.learnRate * error * inputs[i];
 			}
 			biasWeight += layer.net.cfg.learnRate * error;
 		}
+
+		#endregion
 
 
 		private void Copy(Neuron nrn)

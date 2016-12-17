@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TrainingController xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<TrainingControllerConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <tgtEpochs>5000</tgtEpochs>
   <tgtRmsError>0.001</tgtRmsError>
   <trainPasses>10</trainPasses>
@@ -7,4 +7,5 @@
   <trainParamTo>1</trainParamTo>
   <trainParamStep>0.1</trainParamStep>
   <trainEpochs>1</trainEpochs>
-</TrainingController>
+  <bStepAutoAdvance>true</bStepAutoAdvance>
+</TrainingControllerConfig>
